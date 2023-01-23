@@ -183,9 +183,9 @@ class _CustomImageCropState extends State<CustomImageCrop> with CustomImageCropL
 
   void onScaleUpdate(ScaleEvent event) {
     if (_dataTransitionStart != null) {
-      addTransition(_dataTransitionStart! - CropImageData(scale: event.scale, angle: event.rotationAngle));
+      addTransition(_dataTransitionStart! - CropImageData(scale: event.scale));
     }
-    _dataTransitionStart = CropImageData(scale: event.scale, angle: event.rotationAngle);
+    _dataTransitionStart = CropImageData(scale: event.scale);
   }
 
   void onMoveStart(_) {
