@@ -243,7 +243,7 @@ class _CustomImageCropState extends State<CustomImageCrop> with CustomImageCropL
     final clipPath =
         isCircle ? Path.from(_getPath(cropWidth, cropWidth, cropWidth)) : Path.from(getRectPath(_width, rectHight));
 
-    print('${clipPath.getBounds().topLeft} | ${clipPath.getBounds().bottomRight}');
+    // print('${clipPath.getBounds().topLeft} | ${clipPath.getBounds().bottomRight}');
     final matrix4Image = Matrix4.diagonal3(vector_math.Vector3.all(1))
       ..translate(data.x + (isCircle ? cropWidth : _width) / 2, data.y + (isCircle ? cropWidth : _height) / 2)
       ..translate(0.0, isCircle ? 0 : -rectHight.toDouble())
@@ -267,8 +267,8 @@ class _CustomImageCropState extends State<CustomImageCrop> with CustomImageCropL
 
     ui.Picture picture = pictureRecorder.endRecording();
     ui.Image image = await picture.toImage(cropWidth.floor(), isCircle ? cropWidth.floor() : rectHight.floor());
-    print(image.height);
-    print(image.width);
+    // print(image.height);
+    // print(image.width);
 
     // Adding compute would be preferrable. Unfortunately we cannot pass an ui image to this.
     // A workaround would be to save the image and load it inside of the isolate
