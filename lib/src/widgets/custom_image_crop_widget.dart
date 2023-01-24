@@ -260,7 +260,7 @@ class _CustomImageCropState extends State<CustomImageCrop> with CustomImageCropL
       ..rotateZ(data.angle);
 
     final bgPaint = Paint()
-      ..color = Colors.white
+      ..color = Colors.transparent
       ..style = PaintingStyle.fill;
     canvas.drawRect(Rect.fromLTWH(0, 0, cropWidth, isCircle ? cropWidth : rectHight), bgPaint);
     canvas.save();
@@ -275,7 +275,8 @@ class _CustomImageCropState extends State<CustomImageCrop> with CustomImageCropL
     // final bytes = await compute(computeToByteData, <String, dynamic>{'pictureRecorder': pictureRecorder, 'cropWidth': cropWidth});
 
     ui.Picture picture = pictureRecorder.endRecording();
-    ui.Image image = await picture.toImage(cropWidth.floor(), isCircle ? cropWidth.floor() : rectHight.floor());
+    ui.Image image = await picture.toImage(
+        cropWidth.floor() + (isCircle ? 5 : 0), isCircle ? cropWidth.floor() + 5 : rectHight.floor());
     // print(image.height);
     // print(image.width);
 
