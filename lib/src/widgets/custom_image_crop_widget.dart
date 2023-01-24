@@ -62,6 +62,7 @@ class CustomImageCrop extends StatefulWidget {
   CustomImageCrop({
     required this.image,
     required this.cropController,
+    required this.child,
     this.overlayColor = const Color.fromRGBO(0, 0, 0, 0.5),
     this.backgroundColor = Colors.white,
     this.shape = CustomCropShape.Circle,
@@ -71,7 +72,7 @@ class CustomImageCrop extends StatefulWidget {
     Key? key,
   })  : this.imagePaintDuringCrop = imagePaintDuringCrop ?? (Paint()..filterQuality = FilterQuality.high),
         super(key: key);
-
+  final Widget child;
   @override
   _CustomImageCropState createState() => _CustomImageCropState();
 }
@@ -93,6 +94,12 @@ class _CustomImageCropState extends State<CustomImageCrop> with CustomImageCropL
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _getImage();
+  }
+
+  @override
+  void didUpdateWidget(oldWidget) {
+    super.didUpdateWidget(oldWidget);
     _getImage();
   }
 
@@ -155,9 +162,7 @@ class _CustomImageCropState extends State<CustomImageCrop> with CustomImageCropL
                     transform: Matrix4.diagonal3(vector_math.Vector3(scale, scale, scale))
                       ..rotateZ(data.angle)
                       ..translate(-image.width / 2, -image.height / 2),
-                    child: Image(
-                      image: widget.image,
-                    ),
+                    child: widget.child,
                   ),
                 ),
                 IgnorePointer(
@@ -182,6 +187,10 @@ class _CustomImageCropState extends State<CustomImageCrop> with CustomImageCropL
   }
 
   void onScaleUpdate(ScaleEvent event) {
+    if (data.scale < 1 && event.scale < 1) {
+      data.scale = 1;
+      return;
+    }
     if (_dataTransitionStart != null) {
       addTransition(_dataTransitionStart! - CropImageData(scale: event.scale));
     }
