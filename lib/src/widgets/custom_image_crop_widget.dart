@@ -84,6 +84,7 @@ class _CustomImageCropState extends State<CustomImageCrop> with CustomImageCropL
   ui.Image? _imageAsUIImage;
   ImageStream? _imageStream;
   ImageStreamListener? _imageListener;
+  bool _stopEditing = false;
 
   @override
   void initState() {
@@ -169,7 +170,7 @@ class _CustomImageCropState extends State<CustomImageCrop> with CustomImageCropL
                   child: ClipPath(
                     clipper: InvertedClipper(_path, _width, _height),
                     child: Container(
-                      color: widget.overlayColor,
+                      color: _stopEditing ? Colors.black : widget.overlayColor,
                     ),
                   ),
                 ),
@@ -183,10 +184,12 @@ class _CustomImageCropState extends State<CustomImageCrop> with CustomImageCropL
   }
 
   void onScaleStart(_) {
+    if (_stopEditing) return;
     _dataTransitionStart = null; // Reset for update
   }
 
   void onScaleUpdate(ScaleEvent event) {
+    if (_stopEditing) return;
     if (data.scale < 1 && event.scale < 1) {
       data.scale = 1;
       return;
@@ -198,10 +201,12 @@ class _CustomImageCropState extends State<CustomImageCrop> with CustomImageCropL
   }
 
   void onMoveStart(_) {
+    if (_stopEditing) return;
     _dataTransitionStart = null; // Reset for update
   }
 
   void onMoveUpdate(MoveEvent event) {
+    if (_stopEditing) return;
     addTransition(CropImageData(x: event.delta.dx, y: event.delta.dy));
   }
 
@@ -308,6 +313,21 @@ class _CustomImageCropState extends State<CustomImageCrop> with CustomImageCropL
       // The same check should happen (once available) as in addTransition
       data.scale = data.scale.clamp(0.1, 10.0);
     });
+  }
+
+  @override
+  void stopEditing() {
+    setState(() {
+      _stopEditing = true;
+    });
+  }
+
+  @override
+  void resumeEditing() {
+    if (_stopEditing)
+      setState(() {
+        _stopEditing = false;
+      });
   }
 }
 

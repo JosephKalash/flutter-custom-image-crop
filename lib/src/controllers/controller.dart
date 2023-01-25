@@ -8,8 +8,7 @@ class CustomImageCropController {
   final listeners = <CustomImageCropListener>[];
 
   /// Crop the image
-  Future<MemoryImage?> onCropImage() =>
-      listeners.map((e) => e.onCropImage()).first;
+  Future<MemoryImage?> onCropImage() => listeners.map((e) => e.onCropImage()).first;
 
   /// The data that handles the transformation of the cropped image.
   CropImageData? get cropImageData => listeners.map((e) => e.data).first;
@@ -18,8 +17,7 @@ class CustomImageCropController {
   void addListener(CustomImageCropListener listener) => listeners.add(listener);
 
   /// Remove a listener for the cropping area changes
-  void removeListener(CustomImageCropListener listener) =>
-      listeners.remove(listener);
+  void removeListener(CustomImageCropListener listener) => listeners.remove(listener);
 
   /// Notify all listeners for the cropping area changes
   void notifyListeners() => addTransition(CropImageData());
@@ -27,8 +25,11 @@ class CustomImageCropController {
   void dispose() => listeners.clear();
 
   /// Move the cropping area using the given translation
-  void addTransition(CropImageData transition) =>
-      listeners.forEach((e) => e.addTransition(transition));
+  void addTransition(CropImageData transition) => listeners.forEach((e) => e.addTransition(transition));
+
+  void stopEditing() => listeners.forEach((e) => e.stopEditing());
+
+  void resumeEditing() => listeners.forEach((e) => e.resumeEditing());
 
   /// Reset the cropping area
   void reset() => setData(CropImageData());
@@ -46,6 +47,9 @@ mixin CustomImageCropListener {
 
   /// Update the cropping area
   void setData(CropImageData transition);
+
+  void stopEditing();
+  void resumeEditing();
 
   /// Crop the image
   Future<MemoryImage?> onCropImage();
